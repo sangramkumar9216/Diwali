@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dual Fireworks Test</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background: #000;
+        color: white;
+        font-family: Arial, sans-serif;
+      }
+      #test-info {
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        background: rgba(0, 0, 0, 0.8);
+        padding: 15px;
+        border-radius: 10px;
+        z-index: 1000;
+        border: 2px solid #ffd700;
+      }
+      .status {
+        margin: 5px 0;
+        padding: 5px;
+        border-radius: 3px;
+      }
+      .success {
+        background: rgba(0, 255, 0, 0.2);
+      }
+      .warning {
+        background: rgba(255, 255, 0, 0.2);
+      }
+      .error {
+        background: rgba(255, 0, 0, 0.2);
+      }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="jquery.firework.js"></script>
+  </head>
+  <body>
+    <div id="test-info">
+      <h3>🎆 Dual Fireworks Test</h3>
+      <div id="jquery-status" class="status">
+        jQuery Plugin: <span id="jquery-text">Checking...</span>
+      </div>
+      <div id="custom-status" class="status">
+        Custom Fireworks: <span id="custom-text">Checking...</span>
+      </div>
+      <p><strong>Instructions:</strong></p>
+      <p>• Click anywhere to test both systems</p>
+      <p>• Press SPACE for random fireworks</p>
+      <p>• Watch console for detailed logs</p>
+    </div>
+
+    <canvas id="fireworks-canvas"></canvas>
+
+    <script>
+      // Test jQuery fireworks
+      function testJQueryFireworks() {
+        try {
+          if (typeof $ !== "undefined" && $.fn.fireworks) {
+            $("#jquery-text").text("✅ Available");
+            $("#jquery-status").addClass("success");
+
+            // Initialize jQuery fireworks
+            $("body").fireworks({
+              sound: false,
+              opacity: 0.7,
+              width: window.innerWidth,
+              height: window.innerHeight,
+            });
+
+            console.log("✅ jQuery Fireworks Plugin initialized successfully");
+            return true;
+          } else {
+            $("#jquery-text").text("❌ Not Available");
+            $("#jquery-status").addClass("error");
+            console.warn("⚠️ jQuery Fireworks Plugin not available");
+            return false;
+          }
+        } catch (error) {
+          $("#jquery-text").text("❌ Error: " + error.message);
+          $("#jquery-status").addClass("error");
+          console.error("❌ jQuery Fireworks Error:", error);
+          return false;
+        }
+      }
+
+      // Test custom fireworks
+      function testCustomFireworks() {
+        try {
+          const canvas = document.getElementById("fireworks-canvas");
+          const ctx = canvas.getContext("2d");
+
+          if (!canvas || !ctx) {
+            throw new Error("Canvas not available");
+          }
+
+          // Set canvas size
+          canvas.width = window.innerWidth;
+          canvas.height = window.innerHeight;
+
+          let particles = [];
+
+          class Particle {
+            constructor(x, y) {
+              this.x = x;
+              this.y = y;
+              this.vx = (Math.random() - 0.5) * 8;
+              this.vy = (Math.random() - 0.5) * 8;
+              this.life = 1;
+              this.color = `hsl(${Math.random() * 360}, 100%, 50%)`;
+            }
+
+            update() {
+              this.x += this.vx;
+              this.y += this.vy;
+              this.vy += 0.1;
+              this.life -= 0.02;
+            }
+
+            draw() {
+              ctx.save();
+              ctx.globalAlpha = this.life;
+              ctx.fillStyle = this.color;
+              ctx.beginPath();
+              ctx.arc(this.x, this.y, 3, 0, Math.PI * 2);
+              ctx.fill();
+              ctx.restore();
+            }
+          }
+
+          function createFirework(x, y) {
+            for (let i = 0; i < 30; i++) {
+              particles.push(new Particle(x, y));
+            }
+          }
+
+          function animate() {
+            ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            for (let i = particles.length - 1; i >= 0; i--) {
+              particles[i].update();
+              particles[i].draw();
+
+              if (particles[i].life <= 0) {
+                particles.splice(i, 1);
+              }
+            }
+
+            requestAnimationFrame(animate);
+          }
+
+          // Start animation
+          animate();
+
+          // Add click handler
+          canvas.addEventListener("click", (e) => {
+            createFirework(e.clientX, e.clientY);
+          });
+
+          $("#custom-text").text("✅ Working");
+          $("#custom-status").addClass("success");
+          console.log("✅ Custom Fireworks initialized successfully");
+          return true;
+        } catch (error) {
+          $("#custom-text").text("❌ Error: " + error.message);
+          $("#custom-status").addClass("error");
+          console.error("❌ Custom Fireworks Error:", error);
+          return false;
+        }
+      }
+
+      // Run tests when page loads
+      $(document).ready(function () {
+        console.log("🧪 Starting Dual Fireworks Test...");
+
+        const jqueryWorking = testJQueryFireworks();
+        const customWorking = testCustomFireworks();
+
+        if (jqueryWorking && customWorking) {
+          console.log("🎆 Both fireworks systems are working!");
+        } else if (jqueryWorking || customWorking) {
+          console.log("⚠️ One fireworks system is working");
+        } else {
+          console.log("❌ No fireworks systems are working");
+        }
+
+        // Add keyboard handler
+        $(document).keydown(function (e) {
+          if (e.key === " ") {
+            e.preventDefault();
+            const x = Math.random() * window.innerWidth;
+            const y = Math.random() * window.innerHeight * 0.5;
+
+            // Trigger both systems
+            $("<div>")
+              .css({
+                position: "fixed",
+                left: x,
+                top: y,
+                width: "1px",
+                height: "1px",
+                pointerEvents: "none",
+              })
+              .appendTo("body")
+              .fireworks({
+                sound: false,
+                opacity: 0.6,
+                width: 150,
+                height: 150,
+              })
+              .remove();
+
+            // Also trigger custom fireworks
+            const canvas = document.getElementById("fireworks-canvas");
+            const event = new MouseEvent("click", {
+              clientX: x,
+              clientY: y,
+            });
+            canvas.dispatchEvent(event);
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

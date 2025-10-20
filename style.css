@@ -1,100 +1,266 @@
-/* Basic setup */
+/* Enhanced Basic setup */
 body {
-    font-family: 'Roboto', sans-serif;
-    font-weight: 400; /* Slightly bolder for readability */
-    margin: 0;
-    padding: 0; /* Remove padding from body as canvas covers all */
-    background: #1d0336; /* Fallback background, gradient handled by JS */
-    color: #fff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    overflow: hidden; /* Hide any overflow from fireworks */
-    position: relative; /* For stacking context with canvas */
+  font-family: "Roboto", sans-serif;
+  font-weight: 400;
+  margin: 0;
+  padding: 0;
+  background: #0a0a2e; /* Enhanced fallback background */
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  overflow: hidden;
+  position: relative;
+  cursor: crosshair; /* Indicate interactive fireworks */
 }
 
 /* Fireworks Canvas */
 #fireworks-canvas {
-    position: fixed; /* Position fixed so it covers the whole viewport */
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    z-index: -1; /* Place it behind all other content */
-    background: linear-gradient(135deg, #1d0336, #4a171d); /* Our original background gradient */
+  position: fixed; /* Position fixed so it covers the whole viewport */
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1; /* Place it behind all other content */
+  background: linear-gradient(
+    135deg,
+    #1d0336,
+    #4a171d
+  ); /* Our original background gradient */
 }
 
-/* The main wishing card */
+/* jQuery Fireworks Canvas */
+#fireworksField {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: -2 !important; /* Behind our custom canvas */
+  pointer-events: none !important;
+}
+
+/* jQuery Fireworks Container */
+#jquery-fireworks-container {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: -2 !important;
+  pointer-events: none !important;
+}
+
+/* Enhanced main wishing card */
 .card {
-    background: rgba(0, 0, 0, 0.4); /* Semi-transparent dark background */
-    border-radius: 15px;
-    width: 100%;
-    max-width: 450px;
-    text-align: center;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); /* Stronger shadow for depth */
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    overflow: hidden;
-    position: relative; /* For stacking context */
-    z-index: 1; /* Ensure card is above fireworks */
-    animation: fadeIn 1.5s ease-out forwards; /* Card fade in animation */
+  background: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.6),
+    rgba(20, 20, 60, 0.4)
+  );
+  border-radius: 20px;
+  width: 100%;
+  max-width: 480px;
+  text-align: center;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 215, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 215, 0, 0.3);
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+  animation: cardEntrance 2s ease-out forwards;
+  backdrop-filter: blur(10px);
+  transform-style: preserve-3d;
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    45deg,
+    rgba(255, 215, 0, 0.1) 0%,
+    transparent 50%,
+    rgba(255, 165, 0, 0.1) 100%
+  );
+  pointer-events: none;
+  animation: shimmer 3s ease-in-out infinite;
 }
 
 /* Maa Lakshmi image within the card */
 .maa-laxmi-image {
-    width: 100%;
-    max-height: 250px; /* Adjust height as needed */
-    object-fit: cover;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Subtle separator */
+  width: 100%;
+  max-height: 250px; /* Adjust height as needed */
+  object-fit: cover;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Subtle separator */
 }
 
 /* Container for all the text */
 .card-content {
-    padding: 30px;
+  padding: 30px;
 }
 
-/* The main "Happy Diwali" heading */
+/* Enhanced main "Happy Diwali" heading */
 h1 {
-    font-family: 'Great Vibes', cursive;
-    font-size: 4.8rem; /* Slightly larger */
-    font-weight: normal;
-    color: #FFD700; /* Gold */
-    margin: 0;
-    animation: glow 1.5s ease-in-out infinite alternate;
+  font-family: "Great Vibes", cursive;
+  font-size: 5.2rem;
+  font-weight: normal;
+  color: #ffd700;
+  margin: 0;
+  animation: glow 2s ease-in-out infinite alternate,
+    float 4s ease-in-out infinite;
+  text-shadow: 0 0 10px #ffd700, 0 0 20px #ffd700, 0 0 30px #ffa500,
+    0 0 40px #ffa500;
+  position: relative;
+  z-index: 2;
 }
 
 /* The personalized name */
 h2 {
-    font-size: 2.5rem; /* Slightly larger */
-    font-weight: 300;
-    color: #FFA500; /* Orange */
-    margin: 10px 0 25px; /* More space below */
+  font-size: 2.5rem; /* Slightly larger */
+  font-weight: 300;
+  color: #ffa500; /* Orange */
+  margin: 10px 0 25px; /* More space below */
 }
 
 p {
-    font-size: 1.15rem; /* Slightly larger */
-    line-height: 1.7;
-    color: #eee;
+  font-size: 1.15rem; /* Slightly larger */
+  line-height: 1.7;
+  color: #eee;
+}
+
+.interactive-hint {
+  font-size: 1.1rem;
+  color: #ffd700;
+  margin: 20px 0;
+  animation: pulse 2s ease-in-out infinite;
+  font-weight: 500;
+}
+
+.interactive-hint small {
+  font-size: 0.9rem;
+  color: #ffa500;
+  opacity: 0.8;
 }
 
 .from-message {
-    font-style: italic;
-    margin-top: 35px; /* More space above */
-    color: #ddd;
-    font-size: 1rem;
+  font-style: italic;
+  margin-top: 35px;
+  color: #ddd;
+  font-size: 1rem;
 }
 
-/* Animations */
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+/* Enhanced Animations */
 @keyframes glow {
-    from {
-        text-shadow: 0 0 10px #FFD700, 0 0 20px #FFD700, 0 0 30px #FFA500;
-    }
-    to {
-        text-shadow: 0 0 20px #FFD700, 0 0 30px #FFA500, 0 0 40px #FFA500;
-    }
+  0% {
+    text-shadow: 0 0 10px #ffd700, 0 0 20px #ffd700, 0 0 30px #ffa500,
+      0 0 40px #ffa500;
+  }
+  50% {
+    text-shadow: 0 0 15px #ffd700, 0 0 25px #ffd700, 0 0 35px #ffa500,
+      0 0 45px #ffa500;
+  }
+  100% {
+    text-shadow: 0 0 20px #ffd700, 0 0 30px #ffd700, 0 0 40px #ffa500,
+      0 0 50px #ffa500;
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes cardEntrance {
+  0% {
+    opacity: 0;
+    transform: translateY(30px) scale(0.9) rotateX(10deg);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1) rotateX(0deg);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Interactive hover effects */
+.card:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7), 0 0 0 2px rgba(255, 215, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+}
+
+/* Responsive design improvements */
+@media (max-width: 768px) {
+  h1 {
+    font-size: 4rem;
+  }
+
+  h2 {
+    font-size: 2rem;
+  }
+
+  .card {
+    max-width: 90%;
+    margin: 20px;
+  }
+
+  .card-content {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  h1 {
+    font-size: 3.5rem;
+  }
+
+  h2 {
+    font-size: 1.8rem;
+  }
+
+  .card-content {
+    padding: 15px;
+  }
 }

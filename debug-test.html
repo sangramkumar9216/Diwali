@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fireworks Debug Test</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background: #000;
+        color: white;
+        font-family: Arial, sans-serif;
+      }
+      #debug-info {
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        background: rgba(0, 0, 0, 0.9);
+        padding: 15px;
+        border-radius: 10px;
+        z-index: 1000;
+        border: 2px solid #ffd700;
+        max-width: 300px;
+      }
+      .status {
+        margin: 5px 0;
+        padding: 5px;
+        border-radius: 3px;
+      }
+      .success {
+        background: rgba(0, 255, 0, 0.3);
+      }
+      .warning {
+        background: rgba(255, 255, 0, 0.3);
+      }
+      .error {
+        background: rgba(255, 0, 0, 0.3);
+      }
+      .info {
+        background: rgba(0, 0, 255, 0.3);
+      }
+      button {
+        background: #ffd700;
+        color: #000;
+        border: none;
+        padding: 10px 15px;
+        margin: 5px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+      }
+      button:hover {
+        background: #ffa500;
+      }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="jquery.firework.js"></script>
+  </head>
+  <body>
+    <div id="debug-info">
+      <h3>🎆 Fireworks Debug Test</h3>
+      <div id="jquery-status" class="status">
+        jQuery: <span id="jquery-text">Checking...</span>
+      </div>
+      <div id="plugin-status" class="status">
+        Plugin: <span id="plugin-text">Checking...</span>
+      </div>
+      <div id="canvas-status" class="status">
+        Canvas: <span id="canvas-text">Checking...</span>
+      </div>
+      <div id="click-status" class="status">
+        Clicks: <span id="click-count">0</span>
+      </div>
+
+      <div style="margin-top: 10px">
+        <button onclick="testJQueryFireworks()">Test jQuery</button>
+        <button onclick="testCustomFireworks()">Test Custom</button>
+        <button onclick="testBoth()">Test Both</button>
+      </div>
+
+      <div style="margin-top: 10px; font-size: 12px">
+        <p>• Click anywhere to test</p>
+        <p>• Press SPACE for random</p>
+        <p>• Check console for logs</p>
+      </div>
+    </div>
+
+    <canvas id="fireworks-canvas"></canvas>
+
+    <script>
+      let clickCount = 0;
+
+      // Update click counter
+      function updateClickCount() {
+        clickCount++;
+        document.getElementById("click-count").textContent = clickCount;
+      }
+
+      // Test jQuery fireworks
+      function testJQueryFireworks() {
+        console.log("🧪 Testing jQuery Fireworks...");
+        try {
+          if (typeof $ !== "undefined" && $.fn.fireworks) {
+            $("#jquery-text").text("✅ Available");
+            $("#jquery-status").addClass("success");
+
+            // Create test container
+            const testDiv = $("<div>")
+              .css({
+                position: "fixed",
+                left: "50%",
+                top: "50%",
+                width: "300px",
+                height: "300px",
+                transform: "translate(-50%, -50%)",
+                pointerEvents: "none",
+                zIndex: -1,
+              })
+              .appendTo("body");
+
+            testDiv.fireworks({
+              sound: false,
+              opacity: 1.0,
+              width: 300,
+              height: 300,
+            });
+
+            // Remove after 20 seconds
+            setTimeout(() => {
+              testDiv.remove();
+              console.log("✅ jQuery test completed");
+            }, 20000);
+
+            console.log("✅ jQuery Fireworks test started");
+            return true;
+          } else {
+            $("#jquery-text").text("❌ Not Available");
+            $("#jquery-status").addClass("error");
+            console.error("❌ jQuery Fireworks not available");
+            return false;
+          }
+        } catch (error) {
+          $("#jquery-text").text("❌ Error");
+          $("#jquery-status").addClass("error");
+          console.error("❌ jQuery Fireworks Error:", error);
+          return false;
+        }
+      }
+
+      // Test custom fireworks
+      function testCustomFireworks() {
+        console.log("🧪 Testing Custom Fireworks...");
+        try {
+          const canvas = document.getElementById("fireworks-canvas");
+          const ctx = canvas.getContext("2d");
+
+          if (!canvas || !ctx) {
+            throw new Error("Canvas not available");
+          }
+
+          canvas.width = window.innerWidth;
+          canvas.height = window.innerHeight;
+
+          let particles = [];
+
+          class Particle {
+            constructor(x, y) {
+              this.x = x;
+              this.y = y;
+              this.vx = (Math.random() - 0.5) * 10;
+              this.vy = (Math.random() - 0.5) * 10;
+              this.life = 1;
+              this.color = `hsl(${Math.random() * 360}, 100%, 50%)`;
+            }
+
+            update() {
+              this.x += this.vx;
+              this.y += this.vy;
+              this.vy += 0.1;
+              this.life -= 0.02;
+            }
+
+            draw() {
+              ctx.save();
+              ctx.globalAlpha = this.life;
+              ctx.fillStyle = this.color;
+              ctx.beginPath();
+              ctx.arc(this.x, this.y, 4, 0, Math.PI * 2);
+              ctx.fill();
+              ctx.restore();
+            }
+          }
+
+          function createFirework(x, y) {
+            for (let i = 0; i < 50; i++) {
+              particles.push(new Particle(x, y));
+            }
+          }
+
+          function animate() {
+            ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            for (let i = particles.length - 1; i >= 0; i--) {
+              particles[i].update();
+              particles[i].draw();
+
+              if (particles[i].life <= 0) {
+                particles.splice(i, 1);
+              }
+            }
+
+            requestAnimationFrame(animate);
+          }
+
+          animate();
+
+          // Test firework in center
+          createFirework(canvas.width / 2, canvas.height / 2);
+
+          $("#canvas-text").text("✅ Working");
+          $("#canvas-status").addClass("success");
+          console.log("✅ Custom Fireworks test completed");
+          return true;
+        } catch (error) {
+          $("#canvas-text").text("❌ Error");
+          $("#canvas-status").addClass("error");
+          console.error("❌ Custom Fireworks Error:", error);
+          return false;
+        }
+      }
+
+      // Test both systems
+      function testBoth() {
+        console.log("🧪 Testing Both Systems...");
+        testJQueryFireworks();
+        testCustomFireworks();
+      }
+
+      // Initialize when page loads
+      $(document).ready(function () {
+        console.log("🚀 Fireworks Debug Test Starting...");
+
+        // Check jQuery
+        if (typeof $ !== "undefined") {
+          $("#jquery-text").text("✅ Loaded");
+          $("#jquery-status").addClass("success");
+        } else {
+          $("#jquery-text").text("❌ Not Loaded");
+          $("#jquery-status").addClass("error");
+        }
+
+        // Check plugin
+        if (typeof $ !== "undefined" && $.fn.fireworks) {
+          $("#plugin-text").text("✅ Available");
+          $("#plugin-status").addClass("success");
+        } else {
+          $("#plugin-text").text("❌ Not Available");
+          $("#plugin-status").addClass("error");
+        }
+
+        // Check canvas
+        const canvas = document.getElementById("fireworks-canvas");
+        if (canvas) {
+          $("#canvas-text").text("✅ Available");
+          $("#canvas-status").addClass("success");
+        } else {
+          $("#canvas-text").text("❌ Not Available");
+          $("#canvas-status").addClass("error");
+        }
+
+        // Add click handler
+        $(document).click(function (e) {
+          updateClickCount();
+          console.log("🖱️ Click detected at:", e.clientX, e.clientY);
+
+          // Test both systems on click
+          testBoth();
+        });
+
+        // Add keyboard handler
+        $(document).keydown(function (e) {
+          if (e.key === " ") {
+            e.preventDefault();
+            updateClickCount();
+            console.log("⌨️ SPACE pressed");
+            testBoth();
+          }
+        });
+
+        console.log("✅ Debug test initialized");
+      });
+    </script>
+  </body>
+</html>
