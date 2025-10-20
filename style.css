@@ -1,0 +1,79 @@
+/* Basic setup */
+body {
+    font-family: 'Roboto', sans-serif; /* Clean font for the message */
+    font-weight: 300;
+    margin: 0;
+    padding: 20px;
+    /* Festive dark background gradient */
+    background: linear-gradient(135deg, #1d0336, #4a171d);
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* The main wishing card */
+.card {
+    background: rgba(0, 0, 0, 0.3); /* Semi-transparent dark background */
+    border-radius: 15px;
+    width: 100%;
+    max-width: 450px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    overflow: hidden; /* Keeps the image corners rounded */
+}
+
+/* The image at the top */
+.card-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover; /* Ensures the image covers the area nicely */
+}
+
+/* Container for all the text */
+.card-content {
+    padding: 30px;
+}
+
+/* The main "Happy Diwali" heading */
+h1 {
+    font-family: 'Great Vibes', cursive; /* Our festive font */
+    font-size: 4.5rem;
+    font-weight: normal;
+    color: #FFD700; /* Gold */
+    margin: 0;
+    /* Glowing text effect */
+    animation: glow 1.5s ease-in-out infinite alternate;
+}
+
+/* The personalized name */
+h2 {
+    font-size: 2.2rem;
+    font-weight: 300;
+    color: #FFA500; /* Orange */
+    margin: 10px 0 20px;
+}
+
+p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #eee; /* Slightly softer white */
+}
+
+.from-message {
+    font-style: italic;
+    margin-top: 30px;
+    color: #ddd;
+}
+
+/* Glowing animation keyframes */
+@keyframes glow {
+    from {
+        text-shadow: 0 0 10px #FFD700, 0 0 20px #FFD700, 0 0 30px #FFA500;
+    }
+    to {
+        text-shadow: 0 0 20px #FFD700, 0 0 30px #FFA500, 0 0 40px #FFA500;
+    }
+}
